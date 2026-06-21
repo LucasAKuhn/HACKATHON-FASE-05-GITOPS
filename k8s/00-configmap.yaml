@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: solidarytech-config
+  namespace: solidarytech
+data:
+  DATABASE_HOST: "solidarytech-db.c4ndc8whimdx.us-east-1.rds.amazonaws.com"
+  DATABASE_NAME: "postgres"
+  AWS_SQS_URL: "https://sqs.us-east-1.amazonaws.com/982834637703/donations-events-queue"
+  AWS_DYNAMODB_TABLE: "SolidaryTechVolunteers"
+  AWS_REGION: "us-east-1"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector-opentelemetry-collector.observability.svc.cluster.local:4318"
