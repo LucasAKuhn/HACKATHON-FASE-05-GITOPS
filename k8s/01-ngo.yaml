@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngo-service
+  namespace: solidarytech
+  labels:
+    app: ngo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngo-service
+  template:
+    metadata:
+      labels:
+        app: ngo-service
+    spec:
+      containers:
+      - name: app
+        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/ngo-service:9864031f3fc93e0abea40dedb5cc0d529fc8d7c5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: solidarytech-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password_ngo
+        - name: DATABASE_URL
+          value: "host=$(DATABASE_HOST) port=5432 user=app_ngo password=$(DB_PASSWORD) dbname=ngo_db sslmode=require"
+        - name: OTEL_SERVICE_NAME
+          value: "ngo-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngo-service
+  namespace: solidarytech
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8081
+  selector:
+    app: ngo-service

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: donation-service
+  namespace: solidarytech
+  labels:
+    app: donation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: donation-service
+  template:
+    metadata:
+      labels:
+        app: donation-service
+    spec:
+      containers:
+      - name: app
+        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/donation-service:9864031f3fc93e0abea40dedb5cc0d529fc8d7c5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8082
+          initialDelaySeconds: 2
+          periodSeconds: 5
+        envFrom:
+        - configMapRef:
+            name: solidarytech-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password_donation
+        - name: DATABASE_URL
+          value: "host=$(DATABASE_HOST) port=5432 user=app_donation password=$(DB_PASSWORD) dbname=donation_db sslmode=require"
+        - name: OTEL_SERVICE_NAME
+          value: "donation-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: donation-service
+  namespace: solidarytech
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8082
+  selector:
+    app: donation-service

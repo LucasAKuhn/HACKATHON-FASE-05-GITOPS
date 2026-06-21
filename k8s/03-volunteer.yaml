@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volunteer-service
+  namespace: solidarytech
+  labels:
+    app: volunteer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volunteer-service
+  template:
+    metadata:
+      labels:
+        app: volunteer-service
+    spec:
+      containers:
+      - name: app
+        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/volunteer-service:9864031f3fc93e0abea40dedb5cc0d529fc8d7c5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8083
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8083
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: solidarytech-config
+        env:
+        - name: OTEL_SERVICE_NAME
+          value: "volunteer-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: volunteer-service
+  namespace: solidarytech
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8083
+  selector:
+    app: volunteer-service

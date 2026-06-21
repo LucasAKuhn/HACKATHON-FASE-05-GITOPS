@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: solidarytech-ingress
+  namespace: solidarytech
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /ngos
+        pathType: Prefix
+        backend:
+          service:
+            name: ngo-service
+            port:
+              number: 80
+      - path: /donations
+        pathType: Prefix
+        backend:
+          service:
+            name: donation-service
+            port:
+              number: 80
+      - path: /volunteers
+        pathType: Prefix
+        backend:
+          service:
+            name: volunteer-service
+            port:
+              number: 80
