@@ -83,6 +83,14 @@ resource "helm_release" "loki" {
     value = "false"
   }
   set {
+    name  = "loki.commonConfig.replication_factor"
+    value = "1"
+  }
+  set {
+    name  = "loki.containerSecurityContext.readOnlyRootFilesystem"
+    value = "false"
+  }
+  set {
     name  = "loki.storage.type"
     value = "filesystem"
   }
