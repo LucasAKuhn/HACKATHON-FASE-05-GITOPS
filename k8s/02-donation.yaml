@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/donation-service:9864031f3fc93e0abea40dedb5cc0d529fc8d7c5
+        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/donation-service:ca015269ab00ff4d43a9d6b89784d354ab16e665
         imagePullPolicy: Always
         ports:
         - containerPort: 8082
