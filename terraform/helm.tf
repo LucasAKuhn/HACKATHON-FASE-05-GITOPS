@@ -220,6 +220,7 @@ resource "kubernetes_job_v1" "db_init" {
     namespace = "solidarytech"
   }
   spec {
+    ttl_seconds_after_finished = 60 # Remove o Job e o Pod 60 segundos após o término
     template {
       metadata {
         labels = {
