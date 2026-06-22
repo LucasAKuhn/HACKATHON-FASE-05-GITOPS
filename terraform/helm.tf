@@ -19,7 +19,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.service.type"
-    value = "LoadBalancer"
+    value = "ClusterIP"
   }
 }
 
@@ -104,6 +104,10 @@ resource "helm_release" "loki" {
   }
   set {
     name  = "gateway.enabled"
+    value = "false"
+  }
+  set {
+    name  = "singleBinary.persistence.enabled"
     value = "false"
   }
 

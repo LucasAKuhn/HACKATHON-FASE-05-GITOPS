@@ -37,8 +37,6 @@ spec:
         envFrom:
         - configMapRef:
             name: solidarytech-config
-        - secretRef:
-            name: solidarytech-aws-secret
         env:
         - name: DB_PASSWORD
           valueFrom:
