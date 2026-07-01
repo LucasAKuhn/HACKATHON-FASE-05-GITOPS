@@ -14,7 +14,8 @@ variable "github_pat" {
 variable "github_repo_url" {
   description = "A URL do seu repositorio Git que o ArgoCD deve escutar. Passe via TF_VAR_github_repo_url"
   type        = string
-  default     = "https://github.com/julianopoklen/HACKATHON-FASE-05-GITOPS.git"
+
+  default     = "https://github.com/LucasAKuhn/HACKATHON-FASE-05-GITOPS.git"
 }
 
 variable "db_password" {
