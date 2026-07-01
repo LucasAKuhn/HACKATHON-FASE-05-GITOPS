@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/julianopoklen/HACKATHON-FASE-05-GITOPS.git'
+    repoURL: 'https://github.com/LucasAKuhn/HACKATHON-FASE-05-GITOPS.git'
     path: k8s
     targetRevision: HEAD
   destination:
