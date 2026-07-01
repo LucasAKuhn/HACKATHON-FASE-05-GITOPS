@@ -16,39 +16,26 @@ spec:
         app: donation-service
     spec:
       containers:
-      - name: app
-        image: 982834637703.dkr.ecr.us-east-1.amazonaws.com/donation-service:ca015269ab00ff4d43a9d6b89784d354ab16e665
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8082
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 250m
-            memory: 128Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8082
-          initialDelaySeconds: 2
-          periodSeconds: 5
-        envFrom:
-        - configMapRef:
-            name: solidarytech-config
-        - secretRef:
-            name: solidarytech-aws-secret
-        env:
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: password_donation
-        - name: DATABASE_URL
-          value: "host=$(DATABASE_HOST) port=5432 user=app_donation password=$(DB_PASSWORD) dbname=donation_db sslmode=require"
-        - name: OTEL_SERVICE_NAME
-          value: "donation-service"
+        - name: app
+          image: traefik/whoami:latest
+          args: [ "--port", "8082" ]
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8082
+            initialDelaySeconds: 2
+            periodSeconds: 5
+
 ---
 apiVersion: v1
 kind: Service
