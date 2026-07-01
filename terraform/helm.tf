@@ -34,6 +34,19 @@ resource "helm_release" "ingress_nginx" {
     name  = "controller.service.type"
     value = "LoadBalancer"
   }
+
+  set {
+    name  = "controller.metrics.enabled"
+    value = "true"
+  }
+  set {
+    name  = "controller.metrics.serviceMonitor.enabled"
+    value = "true"
+  }
+  set {
+    name  = "controller.metrics.serviceMonitor.additionalLabels.release"
+    value = "prometheus"
+  }
 }
 
 # Stack de Observabilidade simplificada
