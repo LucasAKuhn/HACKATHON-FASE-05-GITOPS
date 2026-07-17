@@ -13,11 +13,13 @@ spec:
       rules:
         # -------------------------------------------------------------
         # ALERTA 1 - Latência alta (viola o SLI de Latência: p99 < 500ms)
+        # Fonte: histograma do prober do kubelet, que mede a duração real
+        # do health check HTTP (/health) do donation-service.
         # -------------------------------------------------------------
         - alert: DonationServiceHighLatencyP99
           expr: |
             histogram_quantile(0.99,
-              sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{service="donation-service"}[5m])) by (le)
+              sum(rate(prober_probe_duration_seconds_bucket{namespace="solidarytech",pod=~"donation-service.*",probe_type="Liveness"}[5m])) by (le)
             ) * 1000 > 500
           for: 2m
           labels:
@@ -26,31 +28,35 @@ spec:
             slo: latencia
           annotations:
             summary: "Latência p99 do donation-service acima de 500ms"
-            description: "A latência p99 está em {{ $value | humanize }}ms nos últimos 5 minutos, violando o SLO de latência (p99 < 500ms)."
+            description: "A latência p99 do health check está em {{ $value | humanize }}ms nos últimos 5 minutos, violando o SLO de latência (p99 < 500ms)."
 
         # -------------------------------------------------------------
-        # ALERTA 2 - Taxa de erro alta (viola o SLI de Erros / SLO 99.9%)
+        # ALERTA 2 - Disponibilidade abaixo do SLO de 99,9%
+        # Fonte: kube-state-metrics (réplicas saudáveis vs. desejadas).
         # -------------------------------------------------------------
-        - alert: DonationServiceHighErrorRate
+        - alert: DonationServiceLowAvailability
           expr: |
-            sum(rate(nginx_ingress_controller_requests{service="donation-service",status=~"5.."}[5m]))
-            / clamp_min(sum(rate(nginx_ingress_controller_requests{service="donation-service"}[5m])), 0.001)
-            * 100 > 1
+            (
+              sum(kube_deployment_status_replicas_available{namespace="solidarytech",deployment="donation-service"})
+              /
+              clamp_min(sum(kube_deployment_spec_replicas{namespace="solidarytech",deployment="donation-service"}), 1)
+            ) * 100 < 99.9
           for: 2m
           labels:
             severity: critical
             service: donation-service
             slo: disponibilidade
           annotations:
-            summary: "Taxa de erro 5xx do donation-service acima de 1%"
-            description: "A taxa de erros 5xx está em {{ $value | humanize }}% nos últimos 5 minutos, consumindo o Error Budget do SLO de 99.9%."
+            summary: "Disponibilidade do donation-service abaixo do SLO de 99,9%"
+            description: "A disponibilidade está em {{ $value | humanize }}% há mais de 2 minutos, consumindo o Error Budget do SLO de 99,9%."
 
         # -------------------------------------------------------------
-        # ALERTA 3 - Health Check: serviço sem réplicas disponíveis (fora do ar)
+        # ALERTA 3 - Health Check: serviço sem réplicas disponíveis
+        # Hot Path totalmente indisponível.
         # -------------------------------------------------------------
         - alert: DonationServiceDown
           expr: |
-            kube_deployment_status_replicas_available{deployment="donation-service",namespace="solidarytech"} < 1
+            sum(kube_deployment_status_replicas_available{namespace="solidarytech",deployment="donation-service"}) < 1
           for: 1m
           labels:
             severity: critical
