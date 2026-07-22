@@ -58,6 +58,12 @@ resource "helm_release" "kube_prometheus_stack" {
   create_namespace = true
 }
 
+
+# ============================================================================
+# OTel Collector — configurado para EXPORTAR traces para o New Relic (OTLP).
+# Substitui o bloco "helm_release.otel_collector" anterior.
+# A license key vem da variável new_relic_license_key (TF_VAR_new_relic_license_key).
+# ============================================================================
 resource "helm_release" "otel_collector" {
   name             = "otel-collector"
   repository       = "https://open-telemetry.github.io/opentelemetry-helm-charts"
@@ -69,12 +75,43 @@ resource "helm_release" "otel_collector" {
     name  = "mode"
     value = "daemonset"
   }
-
   set {
     name  = "image.repository"
     value = "otel/opentelemetry-collector-contrib"
   }
+
+  # Configuração do pipeline: recebe via OTLP e exporta para o New Relic.
+  values = [<<-YAML
+    config:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      processors:
+        batch: {}
+      exporters:
+        otlphttp/newrelic:
+          endpoint: "https://otlp.nr-data.net"
+          headers:
+            api-key: "${var.new_relic_license_key}"
+        debug:
+          verbosity: normal
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            processors: [batch]
+            exporters: [otlphttp/newrelic, debug]
+  YAML
+  ]
 }
+
+
+
+
 
 # --- OBSERVABILIDADE AVANÇADA (LOGS) ---
 resource "helm_release" "loki" {

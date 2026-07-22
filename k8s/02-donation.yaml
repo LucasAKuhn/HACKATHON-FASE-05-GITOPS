@@ -15,13 +15,20 @@ spec:
       labels:
         app: donation-service
     spec:
+
       containers:
         - name: app
-          image: traefik/whoami:latest
-          args: [ "--port", "8082" ]
+          image: ghcr.io/open-telemetry/opentelemetry-demo:latest-frontend
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector-opentelemetry-collector.observability.svc.cluster.local:4318"
+            - name: OTEL_SERVICE_NAME
+              value: "donation-service"
+            - name: OTEL_TRACES_EXPORTER
+              value: "otlp"
           resources:
             requests:
               cpu: 100m
@@ -33,7 +40,7 @@ spec:
             httpGet:
               path: /health
               port: 8082
-            initialDelaySeconds: 2
+            initialDelaySeconds: 10
             periodSeconds: 5
 
 ---
