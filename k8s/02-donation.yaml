@@ -16,19 +16,13 @@ spec:
         app: donation-service
     spec:
 
+
       containers:
         - name: app
-          image: ghcr.io/open-telemetry/opentelemetry-demo:latest-frontend
-          imagePullPolicy: IfNotPresent
+          image: 857760314160.dkr.ecr.us-east-1.amazonaws.com/donation-service:real
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
-          env:
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://otel-collector-opentelemetry-collector.observability.svc.cluster.local:4318"
-            - name: OTEL_SERVICE_NAME
-              value: "donation-service"
-            - name: OTEL_TRACES_EXPORTER
-              value: "otlp"
           resources:
             requests:
               cpu: 100m
@@ -42,6 +36,21 @@ spec:
               port: 8082
             initialDelaySeconds: 10
             periodSeconds: 5
+          envFrom:
+            - configMapRef:
+                name: solidarytech-config
+            - secretRef:
+                name: solidarytech-aws-secret
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password_donation
+            - name: DATABASE_URL
+              value: "host=$(DATABASE_HOST) port=5432 user=app_donation password=$(DB_PASSWORD) dbname=donation_db sslmode=require"
+            - name: OTEL_SERVICE_NAME
+              value: "donation-service"
 
 ---
 apiVersion: v1
