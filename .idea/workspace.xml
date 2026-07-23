@@ -5,9 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="90ac6e57-3db1-4630-8079-74090c87d51e" name="Changes" comment="fix(argocd): aponta application para o repo correto (LucasAKuhn)">
-      <change beforePath="$PROJECT_DIR$/k8s/00-configmap.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/02-donation.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/02-donation.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform/helm.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform/helm.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/helm.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/database/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/database/outputs.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/database/variables.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/ecr/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/eks/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/eks/outputs.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/eks/variables.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/messaging/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/messaging/outputs.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/networking/main.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/modules/networking/outputs.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/providers.tf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform/variables.tf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +76,19 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="HACKATHON-FASE-05-GITOPS" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="HACKATHON-FASE-05-GITOPS" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -81,7 +108,9 @@
       <workItem from="1782912619251" duration="4630000" />
       <workItem from="1783016119216" duration="1523000" />
       <workItem from="1784246868889" duration="984000" />
-      <workItem from="1784677183826" duration="1451000" />
+      <workItem from="1784677183826" duration="7744000" />
+      <workItem from="1784775880351" duration="207000" />
+      <workItem from="1784776099020" duration="113000" />
     </task>
     <task id="LOCAL-00001" summary="fix(argocd): aponta application para o repo correto (LucasAKuhn)">
       <option name="closed" value="true" />
@@ -99,7 +128,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783023681966</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix(argocd): aponta application para o repo correto (LucasAKuhn)">
+      <option name="closed" value="true" />
+      <created>1784679431967</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1784679431967</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
